@@ -1757,7 +1757,7 @@ const double MPH_to_METERSPERSECOND = 0.447;
              @"properties": [NSMutableDictionary dictionaryWithDictionary:@{
                      @"timestamp": timestamp,
                      @"altitude": [NSNumber numberWithInt:(int)round(loc.altitude)],
-                     @"speed": [NSNumber numberWithInt:(int)round(loc.speed)],
+                     @"speed": [NSNumber numberWithDouble:((int)(loc.speed * 100)) / 100.0],
                      @"course": [NSNumber numberWithInt:(int)round(loc.course)],
                      @"horizontal_accuracy": [NSNumber numberWithInt:(int)round(loc.horizontalAccuracy)],
                      @"vertical_accuracy": [NSNumber numberWithInt:(int)round(loc.verticalAccuracy)],
