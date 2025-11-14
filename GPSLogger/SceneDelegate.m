@@ -50,22 +50,32 @@
     [[GLManager sharedManager] applicationDidEnterBackground];
 }
 
-
 - (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts {
     UIOpenURLContext *context = [URLContexts anyObject];
     NSURL *url = context.URL;
     
     if([[url host] isEqualToString:@"setup"]) {
         NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
-        NSArray *queryItems  = urlComponents.queryItems;
+        NSArray *queryItems = urlComponents.queryItems;
+        
         NSString *endpoint = [self queryValueForKey:@"url" fromQueryItems:queryItems];
-        NSString *token    = [self queryValueForKey:@"token" fromQueryItems:queryItems];
+        NSString *token = [self queryValueForKey:@"token" fromQueryItems:queryItems];
         NSString *deviceId = [self queryValueForKey:@"device_id" fromQueryItems:queryItems];
         NSString *uniqueId = [self queryValueForKey:@"unique_id" fromQueryItems:queryItems];
+        
         NSLog(@"Saving new config endpoint=%@ token=%@ device_id=%@ unique_id=%@", endpoint, token, deviceId, uniqueId);
+        
         [[GLManager sharedManager] saveNewDeviceId:deviceId];
         [[GLManager sharedManager] saveNewAPIEndpoint:endpoint andAccessToken:token];
         [[NSUserDefaults standardUserDefaults] setBool:[uniqueId isEqualToString:@"yes"] forKey:GLIncludeUniqueIdDefaultsName];
+    }
+    else if([[url host] isEqualToString:@"start_tracking"]) {
+        NSLog(@"Starting tracking via URL scheme");
+        [[GLManager sharedManager] startAllUpdates];
+    }
+    else if([[url host] isEqualToString:@"stop_tracking"]) {
+        NSLog(@"Stopping tracking via URL scheme");
+        [[GLManager sharedManager] stopAllUpdates];
     }
 }
 
